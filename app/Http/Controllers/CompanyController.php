@@ -110,24 +110,31 @@ class CompanyController extends Controller
        return response()->json(['success' => true, 'message' => 'company delete.','data' => $company]);
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function listCompany()
     {
         $companies =  Company::all();
-        
+        //se recorre las compañias 
         foreach ($companies as $key => $company) {
             if (isset($company->users)) {
+                //se recorre los usuarios por cada compañia
                 foreach ($company->users as  $user) {
                     $idsCategories = [];
                     if (isset($user->categoriesAssigned)) {
+                        //se recorre los categorias asignadas a un usuario
                        foreach ($user->categoriesAssigned as $categoriesAssigned) {
                            $idsCategories[] =  $categoriesAssigned->category_id;
                        }
                     }
+                    //se agregan las categorias asignadas al usuario
                     $user->categories = Category::whereIn('id',$idsCategories)->get();
                 }
             }
         }
-
         return response()->json(['success' => true,'data' => $companies]);
     }
 }
