@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Company;
 use App\Http\Resources\CompanyResource;
 use Validator;
-
+use App\Category;
 
 class CompanyController extends Controller
 {
@@ -108,5 +108,26 @@ class CompanyController extends Controller
         $company->delete();
 
        return response()->json(['success' => true, 'message' => 'company delete.','data' => $company]);
+    }
+
+    public function listCompany()
+    {
+        $companies =  Company::all();
+        
+        foreach ($companies as $key => $company) {
+            if (isset($company->users)) {
+                foreach ($company->users as  $user) {
+                    $idsCategories = [];
+                    if (isset($user->categoriesAssigned)) {
+                       foreach ($user->categoriesAssigned as $categoriesAssigned) {
+                           $idsCategories[] =  $categoriesAssigned->category_id;
+                       }
+                    }
+                    $user->categories = Category::whereIn('id',$idsCategories)->get();
+                }
+            }
+        }
+
+        return response()->json(['success' => true,'data' => $companies]);
     }
 }

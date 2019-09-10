@@ -13,5 +13,11 @@ class CategoryUser extends Model
      */
     protected $table = 'categories_users';
 
-    
+    /**
+     * Get the company that owns the user.
+     */
+    public function categories()
+    {
+   		return $this->belongsTo('App\Category');
+    }
 }

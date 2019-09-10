@@ -19,8 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //New Routes
 Route::resource('users', 'UserController');
+//las categorias asignadas a los usuario
 Route::get('categories/assigned-user','CategoryController@categoriesAssignediUser');
-Route::get('/home', 'HomeController@index')->name('home.index');
 Route::resource('categories', 'CategoryController');
+//La api debe tener una ruta adicional que permita obtener una lista de manera jerarquica
+Route::get('companies/list','CompanyController@listCompany');
 Route::resource('companies', 'CompanyController');
 
